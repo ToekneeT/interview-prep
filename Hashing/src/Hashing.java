@@ -31,10 +31,6 @@ public class Hashing<K, V> {
         map = new Pair[size];
     }
 
-//    private Hashing(int s) {
-//        newMap = new Pair[s];
-//    }
-
     public void set(K key, V value) {
         int hash = key.hashCode() % size;
         Pair<K, V> pair = map[hash];
@@ -134,10 +130,19 @@ public class Hashing<K, V> {
         for (int i = 0; i < size; i++) {
             if (map[i] != null) {
                 hash = map[i].getKey().hashCode() % newSize;
-                newMap[hash] = map[i];
+                if (newMap[hash] == null) {
+                    newMap[hash] = map[i];
+                }
+                else {
+                    Pair<K, V> node = newMap[hash];
+                    while (node.next != null) {
+                        node = node.next;
+                    }
+                    node.next = map[i];
+                }
             }
         }
-        map = newMap;
         size = newSize;
+        map = newMap;
     }
 }

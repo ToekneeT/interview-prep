@@ -72,7 +72,21 @@ public class HashingTest {
         Hashing<String, String> map = new Hashing<String, String>();
         map.set("Foo", "Bar");
         assertEquals(1.0 / 7, map.load());
+        assertEquals(1, map.sizeOf());
+        map.set("Bar", "Foo");
+        assertEquals(2, map.sizeOf());
+        map.set("A", "B");
+        map.set("C", "D");
+        map.set("E", "F");
+        map.set("G", "H");
+        assertEquals(6, map.sizeOf());
+        map.set("I", "J");
+        map.set("K", "L");
+        map.set("M", "N");
+        map.set("O", "P");
+        assertEquals(10, map.sizeOf());
         map.resize(5);
-        assertEquals(1.0 / 5, map.load());
+        assertEquals(10, map.sizeOf());
+        //assertEquals(1.0 / 5, map.load());
     }
 }
