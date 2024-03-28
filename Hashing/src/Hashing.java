@@ -1,3 +1,9 @@
+class KeyError extends RuntimeException {
+    public KeyError(String errorMessage) {
+        super(errorMessage);
+    }
+}
+
 public class Hashing<K, V> {
 
     private class Pair<K, V> {
@@ -23,88 +29,109 @@ public class Hashing<K, V> {
         }
     }
 
-    public int size = 7;
+    // The amount of buckets created.
+    public int buckets;
     private Pair<K, V> map[];
     private Pair<K, V> newMap[];
 
+    // If no buckets is specified, defaults to 7.
     public Hashing() {
-        map = new Pair[size];
+        map = new Pair[7];
+        buckets = 7;
     }
 
-    public void set(K key, V value) {
-        int hash = key.hashCode() % size;
-        Pair<K, V> pair = map[hash];
+    public Hashing(int buckets) {
+        this.buckets = buckets;
+        map = new Pair[buckets];
+    }
 
-        if (pair == null) {
+    // Turns the key into a hash and then mods it by the bucket size.
+    private int hashToBucket(K key, int bucketSize) {
+        return key.hashCode() % bucketSize;
+    }
+
+    // More of an upsert than a set, but set is a nicer name.
+    public void set(K key, V value) {
+        int hash = hashToBucket(key, buckets);
+        Pair<K, V> bucketCursor = map[hash];
+
+        if (bucketCursor == null) {
             map[hash] = new Pair<K, V>(key, value);
+            return;
         }
-        else {
-            while (pair.next != null) {
-                if (pair.getKey() == key) {
-                    pair.setValue(value);
-                    return;
-                }
-                pair = pair.next;
-            }
-            if (pair.getKey() == key) {
-                pair.setValue(value);
-                return;
-            }
-            pair.next = new Pair<K, V>(key, value);
+        // If key exists already, replace the value.
+        if (bucketCursor.getKey() == key) {
+            bucketCursor.setValue(value);
+            return;
         }
+        while (bucketCursor.next != null) {
+            bucketCursor = bucketCursor.next;
+        }
+        bucketCursor.next = new Pair<K, V>(key, value);
     }
 
     public V get(K key) {
-        int hash = key.hashCode() % size;
-        Pair<K, V> pair = map[hash];
+        int hash = hashToBucket(key, buckets);
+        Pair<K, V> bucketCursor = map[hash];
 
-        if (pair == null) {
-            return null;
-        }
-        while (pair != null) {
-            if (pair.getKey() == key) {
-                return pair.getValue();
+        try {
+            if (bucketCursor == null) {
+                throw new KeyError("Key doesn't exist in map.");
             }
-            pair = pair.next;
+            while (bucketCursor != null) {
+                if (bucketCursor.getKey() == key) {
+                    return bucketCursor.getValue();
+                }
+                bucketCursor = bucketCursor.next;
+            }
+            throw new KeyError("Key doesn't exist in map.");
+        } catch (KeyError e) {
+            throw new KeyError("Key doesn't exist in map.");
         }
-        return null;
     }
+
 
     public void del(K key) {
-        int hash = key.hashCode() % size;
-        Pair<K, V> pair = map[hash];
+        int hash = hashToBucket(key, buckets);
+        Pair<K, V> bucketCursor = map[hash];
 
-        if (pair.getKey() == key) {
-            map[hash] = pair.next;
-            pair.next = null;
+        if (bucketCursor.getKey() == key) {
+            map[hash] = bucketCursor.next;
+            bucketCursor.next = null;
         }
-        Pair<K, V> prev = pair;
-        while (pair != null) {
-            if (pair.getKey() == key) {
-                prev.next = pair.next;
-                pair.next = null;
+        Pair<K, V> prev = bucketCursor;
+        while (bucketCursor != null) {
+            if (bucketCursor.getKey() == key) {
+                prev.next = bucketCursor.next;
+                bucketCursor.next = null;
             }
-            prev = pair;
-            pair = pair.next;
+            prev = bucketCursor;
+            bucketCursor = bucketCursor.next;
         }
     }
 
-    public boolean in(K key) {
-        int hash = key.hashCode() % size;
-        Pair<K, V> pair = map[hash];
+    public boolean keyExists(K key) {
+        int hash = hashToBucket(key, buckets);
+        Pair<K, V> bucketCursor = map[hash];
 
-        if (pair == null) {
+        if (bucketCursor == null) {
             return false;
         }
-        else if (pair.getKey() != key) {
-            return false;
+        while (bucketCursor.next != null) {
+            if (bucketCursor.getKey() == key) {
+                return true;
+            }
+            bucketCursor = bucketCursor.next;
         }
-        return true;
+        if (bucketCursor.getKey() == key) {
+            return true;
+        }
+        return false;
     }
 
     public int sizeOf() {
         int mapSize = 0;
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < buckets; i++) {
             Pair<K, V> nextNode = map[i];
             while (nextNode != null) {
                 nextNode = nextNode.next;
@@ -116,33 +143,24 @@ public class Hashing<K, V> {
 
     public double load() {
         double load = 0;
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < buckets; i++) {
             if (map[i] != null) {
                 load++;
             }
         }
-        return load / size;
+        return load / buckets;
     }
 
-    public void resize(int newSize) {
-        newMap = new Pair[newSize];
-        int hash;
-        for (int i = 0; i < size; i++) {
-            if (map[i] != null) {
-                hash = map[i].getKey().hashCode() % newSize;
-                if (newMap[hash] == null) {
-                    newMap[hash] = map[i];
-                }
-                else {
-                    Pair<K, V> node = newMap[hash];
-                    while (node.next != null) {
-                        node = node.next;
-                    }
-                    node.next = map[i];
-                }
+    // Resize returns a new map.
+    public Hashing<K, V> resize(int newBucSize) {
+        Hashing<K, V> newMap = new Hashing<>(newBucSize);
+        for (int i = 0; i < buckets; i++) {
+            Pair<K, V> nextNode = map[i];
+            while (nextNode != null) {
+                newMap.set(nextNode.getKey(), nextNode.getValue());
+                nextNode = nextNode.next;
             }
         }
-        size = newSize;
-        map = newMap;
+        return newMap;
     }
 }
