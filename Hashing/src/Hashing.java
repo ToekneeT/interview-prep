@@ -98,6 +98,7 @@ public class Hashing<K, V> {
         if (bucketCursor.getKey() == key) {
             map[hash] = bucketCursor.next;
             bucketCursor.next = null;
+            return;
         }
         Pair<K, V> prev = bucketCursor;
         while (bucketCursor != null) {
@@ -162,5 +163,59 @@ public class Hashing<K, V> {
             }
         }
         return newMap;
+    }
+
+    public Object[] keys() {
+        int mapSize = 0;
+        int count = 0;
+        for (int i = 0; i < buckets; i++) {
+            Pair<K, V> nextNode = map[i];
+            while (nextNode != null) {
+                nextNode = nextNode.next;
+                mapSize++;
+            }
+        }
+        Object[] keys = new Object[mapSize];
+        for (int i = 0; i < buckets; i++) {
+            Pair<K, V> nextNode = map[i];
+            while (nextNode != null) {
+                keys[count] = nextNode.getKey();
+                count++;
+                nextNode = nextNode.next;
+            }
+        }
+        return keys;
+    }
+
+    public Object[] values() {
+        int mapSize = 0;
+        int count = 0;
+        for (int i = 0; i < buckets; i++) {
+            Pair<K, V> nextNode = map[i];
+            while (nextNode != null) {
+                nextNode = nextNode.next;
+                mapSize++;
+            }
+        }
+        Object[] values = new Object[mapSize];
+        for (int i = 0; i < buckets; i++) {
+            Pair<K, V> nextNode = map[i];
+            while (nextNode != null) {
+                values[count] = nextNode.getValue();
+                count++;
+                nextNode = nextNode.next;
+            }
+        }
+        return values;
+    }
+
+    public void printMap() {
+        for (int i = 0; i < buckets; i++) {
+            Pair<K, V> nextNode = map[i];
+            while (nextNode != null) {
+                System.out.printf("K: %d V: %s\n", nextNode.getKey(), nextNode.getValue());
+                nextNode = nextNode.next;
+            }
+        }
     }
 }
