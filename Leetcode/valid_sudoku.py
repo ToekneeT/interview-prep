@@ -1,29 +1,67 @@
 from collections import Counter
+import math
+
+# Given a Counter, returns true or false whether or not there is
+# more than one occurrence of a number.
+def isValidSection(counter):
+    most_occur = counter.most_common(2)
+    # . is the empty part of the grid so it should occur often.
+    # But there can be a case where the entire section could be filled.
+    if most_occur[0][0] != "." and most_occur[0][1] > 1:
+        return False
+    # Can be a scenario where the entire section is "empty," or filled with ".", so the len has
+    # to be graeter than 1.
+    elif len(most_occur) > 1 and most_occur[1][1] > 1:
+        return False
+    return True
+
+# A valid subgrid is an integer of the square root of the size.
+# Takes the sqrt of the length of the board then does the power of 2
+# and checks if it's the same length as the original.
+def isValidSubgrid(board):
+    if math.sqrt(len(board)) ** 2 == len(board):
+        return True
+    return False
+
+def getSubgrid(board):
+    subgrid = []
+    for col in range(0, len(board), int(math.sqrt(len(board)))):
+        for row in range(0, len(board[0]), int(math.sqrt(len(board[0])))):
+            grid = []
+            for i in range(int(math.sqrt(len(board)))):
+                for j in range(int(math.sqrt(len(board)))):
+                    grid.append(board[col + i][row + j])
+            subgrid.append(grid)
+    return subgrid
+
 class Solution:
     def isValidSudoku(self, board: List[List[str]]) -> bool:
-        for i in range(9):
+        # Returns false right away if the subgrid is not valid
+        # meaning the sudoku grid isn't solvable.
+        if not isValidSubgrid(board):
+            return False
+
+        for i in range(len(board)):
+            # Counts the occurrences of items within the list.
+            # Numbers and the empty "."
+            # If any occurence other than "." is greater than 1, it 
+            # should return false.
             row_counter = Counter(board[i])
-            for key in row_counter:
-                if key != "." and row_counter[key] > 1:
-                    return False
+            if not isValidSection(row_counter):
+                return isValidSection(row_counter)
             
             col = []
-            for j in range(9):
+            for j in range(len(board[0])):
                 col.append(board[j][i])
             col_counter = Counter(col)
-            for key in col_counter:
-                if key != "." and col_counter[key] > 1:
-                    return False
+            if not isValidSection(col_counter):
+                return isValidSection(col_counter)
         
-        for col in range(0, 9, 3):
-            for row in range(0, 9, 3):
-                subgrid = []
-                for i in range(3):
-                    for j in range(3):
-                        subgrid.append(board[col + i][row + j])
-                    subgrid_counter = Counter(subgrid)
-                    for key in subgrid_counter:
-                        if key != "." and subgrid_counter[key] > 1:
-                            return False
+        subgrid = getSubgrid(board)
+        # Will go through the subgrids and check the counter for each one.
+        for grid in subgrid:
+            subgrid_counter = Counter(grid)
+            if not isValidSection(subgrid_counter):
+                return isValidSection(subgrid_counter)
 
         return True
