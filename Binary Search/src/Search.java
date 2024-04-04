@@ -49,6 +49,8 @@ public class Search {
         int high = words.size() - 1;
         System.out.println("Binary Search:");
 
+        // Both low and high are inclusive
+        // It will still loop if they're equal to each other
         while (low <= high) {
             int mid = (low + high) / 2;
             if (words.get(mid).equals(target)) {
@@ -58,6 +60,9 @@ public class Search {
                 System.out.printf("Elapsed time: %.2f\n\n", elapsedTimeInMilliseconds);
                 return;
             }
+            // Compare to returns a number when given two strings
+            // returns a positive if the string is alphabetically greater than the other.
+            // negative if it's less.
             if (words.get(mid).compareTo(target) < 0) {
                 low = mid + 1;
             } else {
@@ -69,8 +74,6 @@ public class Search {
 
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
-        System.out.println("Enter a word to search: ");
-        String lookup = input.nextLine().toLowerCase();
         // Stick the words in the word file into an arraylist.
         ArrayList<String> words = new ArrayList<>();
         try {
@@ -83,6 +86,9 @@ public class Search {
             System.out.println("An error has occurred.");
             e.printStackTrace();
         }
+
+        System.out.println("Enter a word to search: ");
+        String lookup = input.nextLine().toLowerCase();
 
         while (!lookup.equals("quit program")) {
             linSearch(words, lookup);
