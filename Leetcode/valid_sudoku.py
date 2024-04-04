@@ -64,14 +64,14 @@ def isValidSudoku(self, board: List[List[str]]) -> bool:
         # should return false.
         row_counter = Counter(board[i])
         if not isValidSection(row_counter):
-            return isValidSection(row_counter)
+            return False
         
         col_counter = Counter(full_col[i])
         if not isValidSection(col_counter):
-            return isValidSection(col_counter)
+            return False
         
         subgrid_counter = Counter(subgrid[i])
         if not isValidSection(subgrid_counter):
-            return isValidSection(subgrid_counter)
+            return False
 
     return True
