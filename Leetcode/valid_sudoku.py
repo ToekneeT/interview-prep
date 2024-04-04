@@ -23,45 +23,55 @@ def isValidSubgrid(board):
         return True
     return False
 
+# Puts all the columns of the board into an array and returns it.
+def getCol(board):
+    full_col = []
+    for i in range(len(board)):
+        col = []
+        for j in range(len(board)):
+            col.append(board[j][i])
+        full_col.append(col)
+    return full_col
+
 def getSubgrid(board):
     subgrid = []
+    # The iterable jumps by the subgrid size each loop.
     for col in range(0, len(board), int(math.sqrt(len(board)))):
         for row in range(0, len(board[0]), int(math.sqrt(len(board[0])))):
             grid = []
             for i in range(int(math.sqrt(len(board)))):
                 for j in range(int(math.sqrt(len(board)))):
+                    # Since the iterable jumps by the subgrid size, adding one to the
+                    # iterable each loop will go through the subgrid.
                     grid.append(board[col + i][row + j])
             subgrid.append(grid)
     return subgrid
 
-class Solution:
-    def isValidSudoku(self, board: List[List[str]]) -> bool:
-        # Returns false right away if the subgrid is not valid
-        # meaning the sudoku grid isn't solvable.
-        if not isValidSubgrid(board):
-            return False
+def isValidSudoku(self, board: List[List[str]]) -> bool:
+    # Returns false right away if the subgrid is not valid
+    # meaning the sudoku grid isn't solvable.
+    if not isValidSubgrid(board):
+        return False
 
-        for i in range(len(board)):
-            # Counts the occurrences of items within the list.
-            # Numbers and the empty "."
-            # If any occurence other than "." is greater than 1, it 
-            # should return false.
-            row_counter = Counter(board[i])
-            if not isValidSection(row_counter):
-                return isValidSection(row_counter)
-            
-            col = []
-            for j in range(len(board[0])):
-                col.append(board[j][i])
-            col_counter = Counter(col)
-            if not isValidSection(col_counter):
-                return isValidSection(col_counter)
+    # Gets all the columns and subgrids of the board.
+    full_col = getCol(board)
+    subgrid = getSubgrid(board)
+
+    for i in range(len(board)):
+        # Counts the occurrences of items within the list.
+        # Numbers and the empty "."
+        # If any occurence other than "." is greater than 1, it 
+        # should return false.
+        row_counter = Counter(board[i])
+        if not isValidSection(row_counter):
+            return isValidSection(row_counter)
         
-        subgrid = getSubgrid(board)
-        # Will go through the subgrids and check the counter for each one.
-        for grid in subgrid:
-            subgrid_counter = Counter(grid)
-            if not isValidSection(subgrid_counter):
-                return isValidSection(subgrid_counter)
+        col_counter = Counter(full_col[i])
+        if not isValidSection(col_counter):
+            return isValidSection(col_counter)
+        
+        subgrid_counter = Counter(subgrid[i])
+        if not isValidSection(subgrid_counter):
+            return isValidSection(subgrid_counter)
 
-        return True
+    return True
