@@ -1,3 +1,6 @@
+import java.util.AbstractMap;
+import java.util.ArrayList;
+
 class KeyError extends RuntimeException {
     public KeyError(String errorMessage) {
         super(errorMessage);
@@ -165,48 +168,40 @@ public class Hashing<K, V> {
         return newMap;
     }
 
-    public Object[] keys() {
-        int mapSize = 0;
-        int count = 0;
+    public ArrayList<Object> keys() {
+        ArrayList<Object> keys = new ArrayList<>();
         for (int i = 0; i < buckets; i++) {
             Pair<K, V> nextNode = map[i];
             while (nextNode != null) {
-                nextNode = nextNode.next;
-                mapSize++;
-            }
-        }
-        Object[] keys = new Object[mapSize];
-        for (int i = 0; i < buckets; i++) {
-            Pair<K, V> nextNode = map[i];
-            while (nextNode != null) {
-                keys[count] = nextNode.getKey();
-                count++;
+                keys.add(nextNode.getKey());
                 nextNode = nextNode.next;
             }
         }
         return keys;
     }
 
-    public Object[] values() {
-        int mapSize = 0;
-        int count = 0;
+    public ArrayList<Object> values() {
+        ArrayList<Object> values = new ArrayList<>();
         for (int i = 0; i < buckets; i++) {
             Pair<K, V> nextNode = map[i];
             while (nextNode != null) {
-                nextNode = nextNode.next;
-                mapSize++;
-            }
-        }
-        Object[] values = new Object[mapSize];
-        for (int i = 0; i < buckets; i++) {
-            Pair<K, V> nextNode = map[i];
-            while (nextNode != null) {
-                values[count] = nextNode.getValue();
-                count++;
+                values.add(nextNode.getValue());
                 nextNode = nextNode.next;
             }
         }
         return values;
+    }
+
+    public ArrayList<AbstractMap.SimpleEntry<K, V>> items() {
+        ArrayList<AbstractMap.SimpleEntry<K,V>> items = new ArrayList<>();
+        for (int i = 0; i < buckets; i++) {
+            Pair<K, V> nextNode = map[i];
+            while (nextNode != null) {
+                items.add(new AbstractMap.SimpleEntry<K, V>(nextNode.getKey(), nextNode.getValue()));
+                nextNode = nextNode.next;
+            }
+        }
+        return items;
     }
 
     public void printMap() {

@@ -1,7 +1,8 @@
 import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.security.Key;
+import java.util.AbstractMap;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,7 +13,7 @@ public class HashingTest {
     // Key is number, value is corresponding letter in alphabet % num - 1.
     void fillHashmap(Hashing<Integer, String> map, int size) {
         String[] a_z = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
-        "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+                "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
         for (int i = 0; i < size; i++) {
             map.set(i, a_z[i % a_z.length]);
             assertEquals(map.get(i), a_z[i % a_z.length]);
@@ -98,8 +99,8 @@ public class HashingTest {
         map.set(1, "One");
         assertEquals("One", map.get(1));
         Throwable exception = assertThrows(KeyError.class, () -> {
-                map.get(2);
-            }
+                    map.get(2);
+                }
         );
         assertEquals("Key doesn't exist in map.", exception.getMessage());
     }
@@ -220,9 +221,9 @@ public class HashingTest {
         // of the fillHashmap function. That way testing if the keys match with a for loop is easier.
         Hashing<Integer, String> map = new Hashing<>(1);
         fillHashmap(map, 26);
-        Object[] k = map.keys();
-        for (int i = 0; i < k.length; i++) {
-            assertEquals(i, k[i]);
+        ArrayList<Object> k = map.keys();
+        for (int i = 0; i < k.size(); i++) {
+            assertEquals(i, k.get(i));
         }
     }
 
@@ -232,9 +233,19 @@ public class HashingTest {
         // of the fillHashmap function. That way testing if the keys match with a for loop is easier.
         Hashing<Integer, String> map = new Hashing<>(1);
         fillHashmap(map, 26);
-        Object[] v = map.values();
-        for (int i = 0; i < v.length; i++) {
-            assertEquals(map.get(i), v[i]);
+        ArrayList<Object> v = map.values();
+        for (int i = 0; i < v.size(); i++) {
+            assertEquals(map.get(i), v.get(i));
+        }
+    }
+
+    @Test
+    void testEntry() {
+        Hashing<Integer, String> map = new Hashing<>(1);
+        fillHashmap(map, 5);
+        ArrayList<AbstractMap.SimpleEntry<Integer, String>> items = map.items();
+        for (int i = 0; i < items.size(); i++) {
+            assertEquals(items.get(i).getValue(), map.get(i));
         }
     }
 
