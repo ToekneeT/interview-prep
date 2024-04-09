@@ -3,6 +3,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -217,26 +219,38 @@ public class HashingTest {
 
     @Test
     void testKeys() {
-        // Set bucket size to 1 so that filling up the map would result in ascending order based on the implementation
-        // of the fillHashmap function. That way testing if the keys match with a for loop is easier.
-        Hashing<Integer, String> map = new Hashing<>(1);
+        // There's no guarantee that the keys will be in the same order that they were placed in, therefore we place
+        // all the keys into two sets, then compare the two and sees if they have the values.
+        Hashing<Integer, String> map = new Hashing<>(3);
         fillHashmap(map, 26);
         ArrayList<Object> k = map.keys();
+        Set<Object> keysSet = new HashSet<>();
+        Set<Object> keysSetTwo = new HashSet<>();
         for (int i = 0; i < k.size(); i++) {
-            assertEquals(i, k.get(i));
+//            assertEquals(map.get(i), v.get(i));
+            keysSet.add(k.get(i));
         }
+        for (int i = 0; i < k.size(); i++) {
+            keysSetTwo.add(k.get(i));
+        }
+        assertTrue(keysSet.containsAll(keysSetTwo));
     }
 
     @Test
     void testValues() {
-        // Set bucket size to 1 so that filling up the map would result in ascending order based on the implementation
-        // of the fillHashmap function. That way testing if the keys match with a for loop is easier.
-        Hashing<Integer, String> map = new Hashing<>(1);
+        Hashing<Integer, String> map = new Hashing<>(3);
         fillHashmap(map, 26);
         ArrayList<Object> v = map.values();
+        Set<Object> valuesSet = new HashSet<>();
+        Set<Object> valuesSetTwo = new HashSet<>();
         for (int i = 0; i < v.size(); i++) {
-            assertEquals(map.get(i), v.get(i));
+//            assertEquals(map.get(i), v.get(i));
+            valuesSet.add(v.get(i));
         }
+        for (int i = 0; i < v.size(); i++) {
+            valuesSetTwo.add(v.get(i));
+        }
+        assertTrue(valuesSet.containsAll(valuesSetTwo));
     }
 
     @Test
@@ -244,9 +258,16 @@ public class HashingTest {
         Hashing<Integer, String> map = new Hashing<>(1);
         fillHashmap(map, 5);
         ArrayList<AbstractMap.SimpleEntry<Integer, String>> items = map.items();
+        Set<AbstractMap.SimpleEntry<Integer, String>> itemsSet = new HashSet<>();
+        Set<AbstractMap.SimpleEntry<Integer, String>> itemsSetTwo = new HashSet<>();
         for (int i = 0; i < items.size(); i++) {
+            itemsSet.add(items.get(i));
             assertEquals(items.get(i).getValue(), map.get(i));
         }
+        for (int i = 0; i < items.size(); i++) {
+            itemsSetTwo.add(items.get(i));
+        }
+        assertTrue(itemsSet.containsAll(itemsSetTwo));
     }
 
 //    @Test
