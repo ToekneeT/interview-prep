@@ -45,12 +45,16 @@ public class Search {
     public static void binarySearch(ArrayList<String> words, String target) {
         long start = System.nanoTime();
         long finish = 0;
+        // low and high are inclusive bounds representing pointers inside the word array.
+        // The bounds represent the current search range we're considering,
+        // such taht we know the target word is somewhere between [low, high] (which is initially
+        // the entire array). During the search, we also know that the word cannot possibly be between
+        // [0, low - 1], or between [high + 1, words.size() - 1], as these portions of the array have been
+        // eliminated by binary search.
         int low = 0;
         int high = words.size() - 1;
         System.out.println("Binary Search:");
 
-        // Both low and high are inclusive
-        // It will still loop if they're equal to each other
         while (low <= high) {
             int mid = (low + high) / 2;
             if (words.get(mid).equals(target)) {
@@ -60,9 +64,11 @@ public class Search {
                 System.out.printf("Elapsed time: %.2f\n\n", elapsedTimeInMilliseconds);
                 return;
             }
-            // Compare to returns a number when given two strings
-            // returns a positive if the string is alphabetically greater than the other.
-            // negative if it's less.
+            // Adjusting the search range based on the comparison between the target and the midpoint word.
+            // For example, if target = "zebra" and the word at mid index = "monkey", since "zebra" is lexicographically
+            // greater than "monkey", we eliminate the left half of the current search range including "monkey" by
+            // setting low = mid + 1. Conversely, if "zebra" was less than "monkey", we would eliminate the right half
+            // of the search range by setting high = mid - 1.
             if (words.get(mid).compareTo(target) < 0) {
                 low = mid + 1;
             } else {
