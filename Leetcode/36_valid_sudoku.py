@@ -19,59 +19,58 @@ def isValidSection(counter):
 # Takes the sqrt of the length of the board then does the power of 2
 # and checks if it's the same length as the original.
 def isValidSubgrid(board):
-    if math.sqrt(len(board)) ** 2 == len(board):
-        return True
-    return False
+    return math.sqrt(len(board)) ** 2 == len(board)
 
 # Puts all the columns of the board into an array and returns it.
-def getCol(board):
-    full_col = []
+def transposeGrid(board):
+    cols = []
     for i in range(len(board)):
         col = []
         for j in range(len(board)):
             col.append(board[j][i])
-        full_col.append(col)
-    return full_col
+        cols.append(col)
+    return cols
 
 def getSubgrid(board):
     subgrid = []
+    subgrid_size = int(math.sqrt(len(board)))
     # The iterable jumps by the subgrid size each loop.
-    for col in range(0, len(board), int(math.sqrt(len(board)))):
-        for row in range(0, len(board[0]), int(math.sqrt(len(board[0])))):
+    for col in range(0, len(board), subgrid_size):
+        for row in range(0, len(board), subgrid_size):
             grid = []
-            for i in range(int(math.sqrt(len(board)))):
-                for j in range(int(math.sqrt(len(board)))):
-                    # Since the iterable jumps by the subgrid size, adding one to the
-                    # iterable each loop will go through the subgrid.
+            for i in range(subgrid_size):
+                for j in range(subgrid_size):
+                    # (row, col) defines the top-left corner of the subgrid, and 
+                    # (i, j) is a local coordinate offset within the subgrid, scanning
+                    # through each cell, row-by-row. This definition means that (row i, col + j)
+                    # is effecitevly a translation from a local to a global coordinate on the 
+                    # entire grid that defines the position of the subgrid cell.
                     grid.append(board[col + i][row + j])
             subgrid.append(grid)
     return subgrid
 
 def isValidSudoku(self, board: List[List[str]]) -> bool:
-    # Returns false right away if the subgrid is not valid
-    # meaning the sudoku grid isn't solvable.
+    # Returns false right away if the subgrid is not valid.
+    # A valid subgrid would need to be a perfect square root of the size 
+    # of the entire board. If not the sudoku grid isn't solvable.
     if not isValidSubgrid(board):
         return False
 
     # Gets all the columns and subgrids of the board.
-    full_col = getCol(board)
-    subgrid = getSubgrid(board)
+    cols = transposeGrid(board)
+    subgrids = getSubgrid(board)
 
     for i in range(len(board)):
         # Counts the occurrences of items within the list.
         # Numbers and the empty "."
-        # If any occurence other than "." is greater than 1, it 
-        # should return false.
+        # If any number has more than one occurrence, whether
+        # in the row, column, or subgrid,
+        # the sudoku grid is not valid as it violates the sudoku rules.
         row_counter = Counter(board[i])
-        if not isValidSection(row_counter):
-            return False
-        
-        col_counter = Counter(full_col[i])
-        if not isValidSection(col_counter):
-            return False
-        
-        subgrid_counter = Counter(subgrid[i])
-        if not isValidSection(subgrid_counter):
+        col_counter = Counter(cols[i])
+        subgrid_counter = Counter(subgrids[i])
+
+        if not (isValidSection(row_counter) and isValidSection(col_counter) and isValidSection(subgrid_counter)):
             return False
 
     return True
