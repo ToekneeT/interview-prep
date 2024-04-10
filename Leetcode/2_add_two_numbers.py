@@ -38,6 +38,9 @@ def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optio
     dummy_head.next = None
     return l3
 '''
+# Things that I had to look up for the solution is how a linked list in Python works.
+# Sorta thought it wasn't possible to do.
+
 # In my next solution, I had thought about making num_one and num_two into strings and concatenating the values into them.
 # I ran into the same problem with the leading 0.
 # So instead, I turned them into a list, go through them in reverse order, and add them, similar to the first solution.
