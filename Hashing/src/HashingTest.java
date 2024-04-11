@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.security.Key;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -220,9 +220,9 @@ public class HashingTest {
         // of the fillHashmap function. That way testing if the keys match with a for loop is easier.
         Hashing<Integer, String> map = new Hashing<>(1);
         fillHashmap(map, 26);
-        Object[] k = map.keys();
-        for (int i = 0; i < k.length; i++) {
-            assertEquals(i, k[i]);
+        ArrayList<Object> k = map.keys();
+        for (int i = 0; i < k.size(); i++) {
+            assertEquals(i, k.get(i));
         }
     }
 
@@ -232,9 +232,9 @@ public class HashingTest {
         // of the fillHashmap function. That way testing if the keys match with a for loop is easier.
         Hashing<Integer, String> map = new Hashing<>(1);
         fillHashmap(map, 26);
-        Object[] v = map.values();
-        for (int i = 0; i < v.length; i++) {
-            assertEquals(map.get(i), v[i]);
+        ArrayList<Object> v = map.values();
+        for (int i = 0; i < v.size(); i++) {
+            assertEquals(map.get(i), v.get(i));
         }
     }
 
