@@ -217,23 +217,27 @@ public class HashingTest {
         assertEquals(expectedOutput, outContent.toString());
     }
 
+    // The following three tests are testing the keys, values, and items within the maps.
+    // Due to the nature of the map, there's no order it comes in.
+    // Because of that, in order to test, we make sure that the length of the set and the
+    // items being tested is the same, otherwise there was one lost somewhere.
+    // If they are the same, now the goal becomes testing the items themselves.
+    // To do so, using a set is good as it's inherently not an ordered list either.
+    // If all items from the keys, values, or items are within a set, then the contents
+    // are all there.
     @Test
     void testKeys() {
-        // There's no guarantee that the keys will be in the same order that they were placed in, therefore we place
-        // all the keys into two sets, then compare the two and sees if they have the values.
         Hashing<Integer, String> map = new Hashing<>(3);
         fillHashmap(map, 26);
         ArrayList<Object> k = map.keys();
         Set<Object> keysSet = new HashSet<>();
-        Set<Object> keysSetTwo = new HashSet<>();
         for (int i = 0; i < k.size(); i++) {
-//            assertEquals(map.get(i), v.get(i));
             keysSet.add(k.get(i));
         }
         for (int i = 0; i < k.size(); i++) {
-            keysSetTwo.add(k.get(i));
+            assertTrue(keysSet.contains(k.get(i)));
         }
-        assertTrue(keysSet.containsAll(keysSetTwo));
+        assertEquals(map.sizeOf(), keysSet.size());
     }
 
     @Test
@@ -242,32 +246,26 @@ public class HashingTest {
         fillHashmap(map, 26);
         ArrayList<Object> v = map.values();
         Set<Object> valuesSet = new HashSet<>();
-        Set<Object> valuesSetTwo = new HashSet<>();
         for (int i = 0; i < v.size(); i++) {
-//            assertEquals(map.get(i), v.get(i));
             valuesSet.add(v.get(i));
         }
-        for (int i = 0; i < v.size(); i++) {
-            valuesSetTwo.add(v.get(i));
+        for (int i = 0; i < valuesSet.size(); i++) {
+            assertTrue(valuesSet.contains(v.get(i)));
         }
-        assertTrue(valuesSet.containsAll(valuesSetTwo));
+        assertEquals(valuesSet.size(), map.sizeOf());
     }
 
     @Test
-    void testEntry() {
+    void testItems() {
         Hashing<Integer, String> map = new Hashing<>(1);
         fillHashmap(map, 5);
         ArrayList<AbstractMap.SimpleEntry<Integer, String>> items = map.items();
         Set<AbstractMap.SimpleEntry<Integer, String>> itemsSet = new HashSet<>();
-        Set<AbstractMap.SimpleEntry<Integer, String>> itemsSetTwo = new HashSet<>();
         for (int i = 0; i < items.size(); i++) {
             itemsSet.add(items.get(i));
             assertEquals(items.get(i).getValue(), map.get(i));
         }
-        for (int i = 0; i < items.size(); i++) {
-            itemsSetTwo.add(items.get(i));
-        }
-        assertTrue(itemsSet.containsAll(itemsSetTwo));
+        assertEquals(itemsSet.size(), map.sizeOf());
     }
 
 //    @Test
