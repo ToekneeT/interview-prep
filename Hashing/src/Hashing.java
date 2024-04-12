@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 import java.util.AbstractMap;
 import java.util.ArrayList;
 
+=======
+import java.util.ArrayList;
+>>>>>>> 3dd4f8a2ed6fdcd269276f7601a615920790c87d
 class KeyError extends RuntimeException {
     public KeyError(String errorMessage) {
         super(errorMessage);
@@ -77,22 +81,33 @@ public class Hashing<K, V> {
         int hash = hashToBucket(key, buckets);
         Pair<K, V> bucketCursor = map[hash];
 
-        try {
-            if (bucketCursor == null) {
-                throw new KeyError("Key doesn't exist in map.");
-            }
-            while (bucketCursor != null) {
-                if (bucketCursor.getKey() == key) {
-                    return bucketCursor.getValue();
-                }
-                bucketCursor = bucketCursor.next;
-            }
-            throw new KeyError("Key doesn't exist in map.");
-        } catch (KeyError e) {
+        if (bucketCursor == null) {
             throw new KeyError("Key doesn't exist in map.");
         }
+        while (bucketCursor != null) {
+            if (bucketCursor.getKey() == key) {
+                return bucketCursor.getValue();
+            }
+            bucketCursor = bucketCursor.next;
+        }
+        throw new KeyError("Key doesn't exist in map.");
     }
 
+    public boolean keyExists(K key) {
+        int hash = hashToBucket(key, buckets);
+        Pair<K, V> bucketCursor = map[hash];
+
+        if (bucketCursor == null) {
+            return false;
+        }
+        while (bucketCursor != null) {
+            if (bucketCursor.getKey() == key) {
+                return true;
+            }
+            bucketCursor = bucketCursor.next;
+        }
+        return false;
+    }
 
     public void del(K key) {
         int hash = hashToBucket(key, buckets);
@@ -112,25 +127,6 @@ public class Hashing<K, V> {
             prev = bucketCursor;
             bucketCursor = bucketCursor.next;
         }
-    }
-
-    public boolean keyExists(K key) {
-        int hash = hashToBucket(key, buckets);
-        Pair<K, V> bucketCursor = map[hash];
-
-        if (bucketCursor == null) {
-            return false;
-        }
-        while (bucketCursor.next != null) {
-            if (bucketCursor.getKey() == key) {
-                return true;
-            }
-            bucketCursor = bucketCursor.next;
-        }
-        if (bucketCursor.getKey() == key) {
-            return true;
-        }
-        return false;
     }
 
     public int sizeOf() {
