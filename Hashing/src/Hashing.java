@@ -1,4 +1,10 @@
+<<<<<<< HEAD
+import java.util.AbstractMap;
 import java.util.ArrayList;
+
+=======
+import java.util.ArrayList;
+>>>>>>> 3dd4f8a2ed6fdcd269276f7601a615920790c87d
 class KeyError extends RuntimeException {
     public KeyError(String errorMessage) {
         super(errorMessage);
@@ -180,6 +186,18 @@ public class Hashing<K, V> {
             }
         }
         return values;
+    }
+
+    public ArrayList<AbstractMap.SimpleEntry<K, V>> items() {
+        ArrayList<AbstractMap.SimpleEntry<K,V>> items = new ArrayList<>();
+        for (int i = 0; i < buckets; i++) {
+            Pair<K, V> nextNode = map[i];
+            while (nextNode != null) {
+                items.add(new AbstractMap.SimpleEntry<K, V>(nextNode.getKey(), nextNode.getValue()));
+                nextNode = nextNode.next;
+            }
+        }
+        return items;
     }
 
     public void printMap() {

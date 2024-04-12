@@ -1,7 +1,14 @@
 import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+<<<<<<< HEAD
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+=======
+import java.util.ArrayList;
+>>>>>>> 3dd4f8a2ed6fdcd269276f7601a615920790c87d
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,7 +19,7 @@ public class HashingTest {
     // Key is number, value is corresponding letter in alphabet % num - 1.
     void fillHashmap(Hashing<Integer, String> map, int size) {
         String[] a_z = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
-        "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+                "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
         for (int i = 0; i < size; i++) {
             map.set(i, a_z[i % a_z.length]);
             assertEquals(map.get(i), a_z[i % a_z.length]);
@@ -98,8 +105,8 @@ public class HashingTest {
         map.set(1, "One");
         assertEquals("One", map.get(1));
         Throwable exception = assertThrows(KeyError.class, () -> {
-                map.get(2);
-            }
+                    map.get(2);
+                }
         );
         assertEquals("Key doesn't exist in map.", exception.getMessage());
     }
@@ -214,28 +221,62 @@ public class HashingTest {
         assertEquals(expectedOutput, outContent.toString());
     }
 
+    // The following three tests are testing the keys, values, and items within the maps.
+    // Due to the nature of the map, there's no order it comes in.
+    // Because of that, in order to test, we make sure that the length of the returned arraylists
+    // is the same size as the original map size, otherwise there was one lost somewhere.
+    // If they are the same, now the goal becomes testing the items themselves.
+    // To do so, we make a new arraylist of keys, values, or items that we know are supposed to be in the
+    // original map. By comparing the two, we know that the items are the same and it's not comparing itself.
     @Test
     void testKeys() {
-        // Set bucket size to 1 so that filling up the map would result in ascending order based on the implementation
-        // of the fillHashmap function. That way testing if the keys match with a for loop is easier.
-        Hashing<Integer, String> map = new Hashing<>(1);
+        Hashing<Integer, String> map = new Hashing<>(3);
         fillHashmap(map, 26);
         ArrayList<Object> k = map.keys();
+<<<<<<< HEAD
+        for (int i = 0; i < 26; i++) {
+            assertTrue(k.contains(i));
+=======
         for (int i = 0; i < k.size(); i++) {
             assertEquals(i, k.get(i));
+>>>>>>> 3dd4f8a2ed6fdcd269276f7601a615920790c87d
         }
+        assertEquals(map.sizeOf(), k.size());
     }
 
     @Test
     void testValues() {
-        // Set bucket size to 1 so that filling up the map would result in ascending order based on the implementation
-        // of the fillHashmap function. That way testing if the keys match with a for loop is easier.
-        Hashing<Integer, String> map = new Hashing<>(1);
+        String[] a_z = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
+                "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+        Hashing<Integer, String> map = new Hashing<>(3);
         fillHashmap(map, 26);
         ArrayList<Object> v = map.values();
+<<<<<<< HEAD
+        for (int i = 0; i < 26; i++) {
+            assertTrue(v.contains(a_z[i]));
+=======
         for (int i = 0; i < v.size(); i++) {
             assertEquals(map.get(i), v.get(i));
+>>>>>>> 3dd4f8a2ed6fdcd269276f7601a615920790c87d
         }
+        assertEquals(v.size(), map.sizeOf());
+    }
+
+    @Test
+    void testItems() {
+        String[] a_z = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
+                "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+        ArrayList<AbstractMap.SimpleEntry<Integer, String>> mapCompare = new ArrayList<>();
+        for (int i = 0; i < 26; i++) {
+            mapCompare.add(new AbstractMap.SimpleEntry<Integer, String>(i, a_z[i % a_z.length]));
+        }
+        Hashing<Integer, String> map = new Hashing<>();
+        fillHashmap(map, 26);
+        ArrayList<AbstractMap.SimpleEntry<Integer, String>> items = map.items();
+        for (int i = 0; i < 26; i++) {
+            assertTrue(items.contains(mapCompare.get(i)));
+        }
+        assertEquals(items.size(), map.sizeOf());
     }
 
 //    @Test
