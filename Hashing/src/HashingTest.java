@@ -219,53 +219,50 @@ public class HashingTest {
 
     // The following three tests are testing the keys, values, and items within the maps.
     // Due to the nature of the map, there's no order it comes in.
-    // Because of that, in order to test, we make sure that the length of the set and the
-    // items being tested is the same, otherwise there was one lost somewhere.
+    // Because of that, in order to test, we make sure that the length of the returned arraylists
+    // is the same size as the original map size, otherwise there was one lost somewhere.
     // If they are the same, now the goal becomes testing the items themselves.
-    // To do so, using a set is good as it's inherently not an ordered list either.
-    // If all items from the keys, values, or items are within a set, then the contents
-    // are all there.
+    // To do so, we make a new arraylist of keys, values, or items that we know are supposed to be in the
+    // original map. By comparing the two, we know that the items are the same and it's not comparing itself.
     @Test
     void testKeys() {
         Hashing<Integer, String> map = new Hashing<>(3);
         fillHashmap(map, 26);
         ArrayList<Object> k = map.keys();
-        Set<Object> keysSet = new HashSet<>();
-        for (int i = 0; i < k.size(); i++) {
-            keysSet.add(k.get(i));
+        for (int i = 0; i < 26; i++) {
+            assertTrue(k.contains(i));
         }
-        for (int i = 0; i < k.size(); i++) {
-            assertTrue(keysSet.contains(k.get(i)));
-        }
-        assertEquals(map.sizeOf(), keysSet.size());
+        assertEquals(map.sizeOf(), k.size());
     }
 
     @Test
     void testValues() {
+        String[] a_z = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
+                "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
         Hashing<Integer, String> map = new Hashing<>(3);
         fillHashmap(map, 26);
         ArrayList<Object> v = map.values();
-        Set<Object> valuesSet = new HashSet<>();
-        for (int i = 0; i < v.size(); i++) {
-            valuesSet.add(v.get(i));
+        for (int i = 0; i < 26; i++) {
+            assertTrue(v.contains(a_z[i]));
         }
-        for (int i = 0; i < valuesSet.size(); i++) {
-            assertTrue(valuesSet.contains(v.get(i)));
-        }
-        assertEquals(valuesSet.size(), map.sizeOf());
+        assertEquals(v.size(), map.sizeOf());
     }
 
     @Test
     void testItems() {
-        Hashing<Integer, String> map = new Hashing<>(1);
-        fillHashmap(map, 5);
-        ArrayList<AbstractMap.SimpleEntry<Integer, String>> items = map.items();
-        Set<AbstractMap.SimpleEntry<Integer, String>> itemsSet = new HashSet<>();
-        for (int i = 0; i < items.size(); i++) {
-            itemsSet.add(items.get(i));
-            assertEquals(items.get(i).getValue(), map.get(i));
+        String[] a_z = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
+                "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+        ArrayList<AbstractMap.SimpleEntry<Integer, String>> mapCompare = new ArrayList<>();
+        for (int i = 0; i < 26; i++) {
+            mapCompare.add(new AbstractMap.SimpleEntry<Integer, String>(i, a_z[i % a_z.length]));
         }
-        assertEquals(itemsSet.size(), map.sizeOf());
+        Hashing<Integer, String> map = new Hashing<>();
+        fillHashmap(map, 26);
+        ArrayList<AbstractMap.SimpleEntry<Integer, String>> items = map.items();
+        for (int i = 0; i < 26; i++) {
+            assertTrue(items.contains(mapCompare.get(i)));
+        }
+        assertEquals(items.size(), map.sizeOf());
     }
 
 //    @Test
