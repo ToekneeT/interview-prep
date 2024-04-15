@@ -1,14 +1,8 @@
 import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-<<<<<<< HEAD
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-=======
-import java.util.ArrayList;
->>>>>>> 3dd4f8a2ed6fdcd269276f7601a615920790c87d
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -233,13 +227,8 @@ public class HashingTest {
         Hashing<Integer, String> map = new Hashing<>(3);
         fillHashmap(map, 26);
         ArrayList<Object> k = map.keys();
-<<<<<<< HEAD
         for (int i = 0; i < 26; i++) {
             assertTrue(k.contains(i));
-=======
-        for (int i = 0; i < k.size(); i++) {
-            assertEquals(i, k.get(i));
->>>>>>> 3dd4f8a2ed6fdcd269276f7601a615920790c87d
         }
         assertEquals(map.sizeOf(), k.size());
     }
@@ -251,13 +240,8 @@ public class HashingTest {
         Hashing<Integer, String> map = new Hashing<>(3);
         fillHashmap(map, 26);
         ArrayList<Object> v = map.values();
-<<<<<<< HEAD
         for (int i = 0; i < 26; i++) {
             assertTrue(v.contains(a_z[i]));
-=======
-        for (int i = 0; i < v.size(); i++) {
-            assertEquals(map.get(i), v.get(i));
->>>>>>> 3dd4f8a2ed6fdcd269276f7601a615920790c87d
         }
         assertEquals(v.size(), map.sizeOf());
     }
