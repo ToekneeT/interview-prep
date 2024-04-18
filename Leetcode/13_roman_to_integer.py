@@ -38,18 +38,32 @@ def romanToInt(s: str) -> int:
     two_letter_roman = ""
     number = 0
     i = 0
+    # while i < len(s):
+    #     if i + 1 != len(s):
+    #         if s[i] in special_case:
+    #             two_letter_roman = s[i] + s[i + 1]
+    #             if two_letter_roman in roman_to_int:
+    #                 number += roman_to_int[two_letter_roman]
+    #                 i += 1
+    #             else:
+    #                 number += roman_to_int[s[i]]
+    #         else:
+    #             number += roman_to_int[s[i]]
+    #     else:
+    #         number += roman_to_int[s[i]]
+    #     i += 1
+    # return number
     while i < len(s):
-        if i + 1 != len(s):
-            if s[i] in special_case:
-                two_letter_roman = s[i] + s[i + 1]
-                if two_letter_roman in roman_to_int:
-                    number += roman_to_int[two_letter_roman]
-                    i += 1
-                else:
-                    number += roman_to_int[s[i]]
-            else:
-                number += roman_to_int[s[i]]
-        else:
+        if i + 1 == len(s):
             number += roman_to_int[s[i]]
+            i += 1
+            continue
+        if s[i] in special_case:
+            two_letter_roman = s[i] + s[i + 1]
+            if two_letter_roman in roman_to_int:
+                number += roman_to_int[two_letter_roman]
+                i += 2
+                continue
+        number += roman_to_int[s[i]]
         i += 1
     return number
