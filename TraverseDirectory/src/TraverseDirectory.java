@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class TraverseDirectory {
     // Pass it an absolute path in string format.
@@ -23,38 +24,38 @@ public class TraverseDirectory {
         return numOfFiles;
     }
 
-    // The following two functions are almost identical functions.
-    // They will call the other in the event there's a subdirectory.
-    // I'm not sure this is correct. It *basically* feels like recursion,
-    // but harder to read, and obviously repeated code since they're effectively identical.
-    // The only difference is that I left the countFilesInSubDir to take a Path object
-    // instead of passing it a string.
-    // Easily changeable by doing countFilesInSubDir(path.toString()) if I wanted.
-    public static int countFilesInSubDir(Path p) throws IOException{
-        int numOfFiles = 0;
-        DirectoryStream<Path> stream = Files.newDirectoryStream((p));
-        for (Path path : stream) {
-            if (!Files.isDirectory(path)) {
-                numOfFiles++;
-            } else {
-                // Calls the other function if it finds a subdirectory.
-                numOfFiles += amtOfFilesInDirs(path.toString());
-            }
-        }
-        return numOfFiles;
-    }
-
+    // Originally, the plan was to do a for loop for the top directory, and place any subdirectories
+    // in the stack called directories. While coding that, I realized that it was repeated code and that
+    // it was possible to do with a single while loop.
+    // But the while loop conditional was if the stack wasn't empty, but the stack should've started
+    // empty, in my mind, at least. So I decided to use a do...while loop.
+    // But, it was the stream variable line that I realized I shouldn't use the passed parameter since
+    // it was a different name from the stack.
+    // Which resulted in me first pushing the passed parameter, and then popping it out.
+    // So, the crux of the story, I didn't actually need a do...while.
     public static int amtOfFilesInDirs(String dir) throws IOException {
+        // A stack representing all of the directories, including the top level.
+        Stack<String> directories = new Stack<String>();
+        // Pushes the initial passed directory into the stack. This is because the stream variable
+        // reads only from the directories stack. If we read directly from the passed parameter,
+        // there would need to be another variable to handle the passed parameter and then the stack.
+        directories.push(dir);
         int numOfFiles = 0;
-        DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(dir));
-        for (Path path : stream) {
-            if (!Files.isDirectory(path)) {
-                numOfFiles++;
-            } else {
-                // Calls the other function if it finds a subdirectory.
-                numOfFiles += countFilesInSubDir(path);
+        do {
+            // Takes a path out of the stack, there will always be at least one path in the stack initially as long
+            // as the passed parameter is a valid path.
+            DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(directories.pop()));
+            for (Path path : stream) {
+                if (!Files.isDirectory(path)) {
+                    numOfFiles++;
+                } else {
+                    // Pushes the directory into the stack. We don't want to go into the new directory just yet,
+                    // we want to count the rest of the files in the current directory first.
+                    directories.push(path.toString());
+                }
             }
-        }
+        // Repeats until the stack contains no other directories, meaning we've reached the root of the folders.
+        } while (!directories.empty());
         return numOfFiles;
     }
     public static void main(String[] args) throws IOException {
