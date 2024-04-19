@@ -86,8 +86,15 @@ def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optio
     '''
     def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
     carry = 0
+    # Intialize a node with the number 0 and set it to l3.
+    # Without doing this, there would be nothing to point to.
+    # If we added a 1 to end of l3, it should be 0 -> 1
     dummy_head = ListNode(0)
     l3 = dummy_head
+    # Carry is included as the last digit added can have a carry.
+    # Example 99 + 1
+    # But the lists could have reached the end already,
+    # but we'd still want to take care of the carry.
     while l1 != None or l2 != None or carry != 0:
         # Doing this allows for one while loop. Sets the value
         # to 0 if the node is None.
@@ -100,10 +107,12 @@ def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optio
         l3.next = new_node
         l3 = l3.next
 
-        # Move forward if the next node doesn't equal none.
+        # Move the list forward until we reach the end of the list.
         l1 = l1.next if l1 != None else None
         l2 = l2.next if l2 != None else None
     
+    # Now sets l3 to dummy_node, but skip the first item
+    # since the first item is the throwaway 0 that wasn't actually needed.
     l3 = dummy_head.next
     dummy_head.next = None
     return l3
