@@ -25,8 +25,10 @@ public class TraverseDirectory {
     }
 
     // Originally, the plan was to do a for loop for the top directory, and place any subdirectories
-    // in the stack called directories. While coding that, I realized that it was repeated code and that
-    // it was possible to do with a single while loop.
+    // in the stack called directories, and then use a while loop that kept going until the stack was empty,
+    // but in that while loop, it'd continue to add to the stack if it found a subdirectory.
+    // While coding that, I realized that it was repeated code and that
+    // it was possible to do with a single outer while loop and a single for loop.
     // But the while loop conditional was if the stack wasn't empty, but the stack should've started
     // empty, in my mind, at least. So I decided to use a do...while loop.
     // But, it was the stream variable line that I realized I shouldn't use the passed parameter since
