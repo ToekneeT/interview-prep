@@ -51,6 +51,8 @@ public class TraverseDirectory {
                 } else {
                     // Pushes the directory into the stack. We don't want to go into the new directory just yet,
                     // we want to count the rest of the files in the current directory first.
+                    // Turns the path object into a string as the stream variable takes a string and turns it into a
+                    // path object.
                     directories.push(path.toString());
                 }
             }
