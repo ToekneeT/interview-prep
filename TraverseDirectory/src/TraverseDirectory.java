@@ -9,8 +9,8 @@ public class TraverseDirectory {
     public static int countFilesInDirs(String dir) throws IOException {
         int numOfFiles = 0;
         // Paths.get() will convert a string into a Path object.
-        DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(dir));
-        for (Path path : stream) {
+        DirectoryStream<Path> directory = Files.newDirectoryStream(Paths.get(dir));
+        for (Path path : directory) {
             // Doesn't count directories as a file itself, but will run the function again
             // if it finds a directory to count the files within it.
             if (!Files.isDirectory(path)) {
@@ -46,8 +46,8 @@ public class TraverseDirectory {
         do {
             // Takes a path out of the stack, there will always be at least one path in the stack initially as long
             // as the passed parameter is a valid path.
-            DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(directories.pop()));
-            for (Path path : stream) {
+            DirectoryStream<Path> directory = Files.newDirectoryStream(Paths.get(directories.pop()));
+            for (Path path : directory) {
                 if (!Files.isDirectory(path)) {
                     numOfFiles++;
                 } else {
@@ -58,7 +58,7 @@ public class TraverseDirectory {
                     directories.push(path.toString());
                 }
             }
-        // Repeats until the stack contains no other directories, meaning we've reached the root of the folders.
+        // Repeats until the stack contains no other directories, meaning we've reached the bottom of the folders.
         } while (!directories.empty());
         return numOfFiles;
     }
