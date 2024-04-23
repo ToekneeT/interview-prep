@@ -39,7 +39,7 @@ and easier to read.
 # converts those numbers from a string to an int.
 # so now packages is a 2D list.
 # e.x. 2x3x4 = [2, 3, 4]
-with open("aoc_d2_input.txt") as file:
+with open("aoc_2015_d2_input.txt") as file:
 	lines = file.readlines()
 	packages = [[int(x) for x in line.rstrip('\n').split('x')] for line in lines]
 
@@ -48,11 +48,13 @@ with open("aoc_d2_input.txt") as file:
 # So we need to convert it to an int in order to perform
 # math functions to it.
 # Sort the package list as the slack is the area of the smallest side.
+# Time complexity: Small portion of the input, doesn't add anything on its own.
+# however, due to the fact that it'll be run each time. Also sorts it. Should make it overall O(3n) -> O(n).
 def needed_slack(package: list) -> int:
 	package.sort()
 	return package[0] * package[1]
 
-
+# Time Complexity: Goes through the input at least once. O(n), runs the needed_slack. But that's a constant, so O(n) still.
 def needed_paper(packages: list) -> int:
 	total = 0
 	for p in packages:
@@ -83,6 +85,7 @@ Meaning, the input of needed_ribbon is going to be the entire
 list of package dimensions, i.e. a nested list.
 '''
 
+# Time Complexity, similar to needed_slack. Would be a constant, so O(n)
 def needed_ribbon(packages: list) -> int:
 	total = 0
 	for p in packages:
@@ -93,6 +96,9 @@ def needed_ribbon(packages: list) -> int:
 		total += smallest_peri + volume
 	return total
 
+# Overall Time Complexity: If I were to add needed_ribbon within the needed_paper. I *think*
+# it'd be O(n) as they're just constants. As long as we're ignoring the reading input and list comprehension
+# to get it to be a nested list of integers.
 
 class Test(unittest.TestCase):
 	def test_slack(self):
