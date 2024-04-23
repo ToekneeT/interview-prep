@@ -1,6 +1,6 @@
 # https://leetcode.com/problems/longest-common-prefix/description/
 
-# Time Complexity: O(max(n1, n2))
+# Time Complexity: O(n^2)
 def longestCommonPrefix(strs: List[str]) -> str:
 	# Sets the prefix as the entire first word
 	# as the end will slowly get chopped off

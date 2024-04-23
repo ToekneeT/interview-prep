@@ -1,3 +1,5 @@
+# https://leetcode.com/problems/valid-parentheses/
+
 # A stack is important as we want the order of the parenthesis
 # to close in the correct order.
 # e.x. (){} closes nicely.
