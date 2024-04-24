@@ -98,6 +98,7 @@ def find_hash_p2(h: str, leading=5) -> int:
 	# of leading we want instead of a set 5.
 	# then we're going to multiply the 0s by the amount of leading
 	# we want
+	# Breaks if leading is passed a 0.
 	while target_hash[:leading] != leading * "0":
 		find_hash += 1
 		str2hash = (h + str(find_hash)).encode()
