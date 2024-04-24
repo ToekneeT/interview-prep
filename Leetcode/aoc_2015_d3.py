@@ -46,10 +46,18 @@ def unique_locations(direc: str) -> int:
 	x, y = 0, 0
 
 	for c in direc:
+		# c is the chararcter direction, such as <^v>, which is the 
+		# key in the dictionary.
+		# By passing it to the dictionary, we'll get the value back
+		# which in this case is either +1 or -1, representing either
+		# going north, south, east, or west.
 		if c in north_south_key:
 			y += north_south_key[c]
 		else:
 			x += west_east_key[c]
+		# Add the vector to a set, sets only have unique values, no
+		# duplicates are allowed. So passing one that already exists won't
+		# change the length of the set, thereby only having unique locations.
 		unique_houses.add((x, y))
 
 	return len(unique_houses)
