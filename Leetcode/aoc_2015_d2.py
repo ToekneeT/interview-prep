@@ -38,15 +38,12 @@ and easier to read.
 # removes the x's, leaving only numbers in a list.
 # converts those numbers from a string to an int.
 # so now packages is a 2D list.
-# e.x. 2x3x4 = [2, 3, 4]
+# e.x. 2x3x4 = [[2, 3, 4]]
 with open("aoc_2015_d2_input.txt") as file:
 	lines = file.readlines()
 	packages = [[int(x) for x in line.rstrip('\n').split('x')] for line in lines]
 
 
-# The package list should be numbers in the form of a string.
-# So we need to convert it to an int in order to perform
-# math functions to it.
 # Sort the package list as the slack is the area of the smallest side.
 # Time complexity: Small portion of the input, doesn't add anything on its own.
 # however, due to the fact that it'll be run each time. Also sorts it. Should make it overall O(3n) -> O(n).
