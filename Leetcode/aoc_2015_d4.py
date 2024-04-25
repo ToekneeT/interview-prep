@@ -18,6 +18,12 @@ variable that goes each loop.
 Combine the secret key with the count variable with string concate, find
 the current hash of that, and if it doesn't lead with 5 zeroes, loop again.
 
+I also didn't understand the problem at first. I was confused as to how the
+answer was found, and what it was doing to get it. I had looked up an online
+string to MD5 converter and played with that for a bit. Putting in the strings
+that the problem gave me until I put in the right combination and got the answer
+that it was looking for.
+
 So looking it up, Python has a built-in called hashlib that can
 convert a string into an MD5 hash.
 '''
@@ -81,8 +87,7 @@ and set the while loop to use that.
 
 Knowing that this will take longer, I have decided to go back in both
 part 2 and part 1 to get execution time.
-This is done by importing time and getting cpu time using the time
-library and using process_time()
+This is done by getting cpu time using the time library and using process_time()
 '''
 
 # This function can completely replace the part 1 version.
@@ -97,7 +102,7 @@ def find_hash_p2(h: str, leading=5) -> int:
 	# of leading zeroes, we're going to slice off the amount
 	# of leading we want instead of a set 5.
 	# then we're going to multiply the 0s by the amount of leading
-	# we want
+	# we want.
 	# Breaks if leading is passed a 0.
 	while target_hash[:leading] != leading * "0":
 		find_hash += 1
