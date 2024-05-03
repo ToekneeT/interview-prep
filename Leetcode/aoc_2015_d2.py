@@ -47,16 +47,15 @@ with open("aoc_2015_d2_input.txt") as file:
 # Sort the package list as the slack is the area of the smallest side.
 # Time complexity: Small portion of the input, doesn't add anything on its own.
 # however, due to the fact that it'll be run each time. Also sorts it. Should make it overall O(3n) -> O(n).
-def needed_slack(package: list) -> int:
-	package.sort()
-	return package[0] * package[1]
+def needed_slack(package: list[list[int, int, int]]) -> int:
+	sorted_package = sorted(package)
+	return sorted_package[0] * sorted_package[1]
 
 # Time Complexity: Goes through the input at least once. O(n), runs the needed_slack. But that's a constant, so O(n) still.
-def needed_paper(packages: list) -> int:
+def needed_paper(packages: list[list]) -> int:
 	total = 0
 	for p in packages:
-		surface_area = 2 * (p[0] * p[1]) + \
-		2 * (p[1] * p[2]) + 2 * (p[0] * p[2])
+		surface_area = 2 * (p[0] * p[1]) + 2 * (p[1] * p[2]) + 2 * (p[0] * p[2])
 		total += surface_area + needed_slack(p)
 	return total
 
@@ -83,11 +82,11 @@ list of package dimensions, i.e. a nested list.
 '''
 
 # Time Complexity, similar to needed_slack. Would be a constant, so O(n)
-def needed_ribbon(packages: list) -> int:
+def needed_ribbon(packages: list[list[int, int, int]]) -> int:
 	total = 0
 	for p in packages:
 		# again, we sort it so that we know the first two elements are the smallest.
-		p.sort()
+		sorted_package = sorted(p)
 		smallest_peri = p[0] * 2 + p[1] * 2
 		volume = p[0] * p[1] * p[2]
 		total += smallest_peri + volume

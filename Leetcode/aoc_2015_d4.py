@@ -15,7 +15,7 @@ Then, it's as simple as looping until it finds the first hash that
 has 5 leading zeroes. But since the number that is combined with 
 the secret key can't have a leading zero itself, we can just use a count
 variable that goes each loop.
-Combine the secret key with the count variable with string concate, find
+Combine the secret key with the count variable with string concatenate, find
 the current hash of that, and if it doesn't lead with 5 zeroes, loop again.
 
 I also didn't understand the problem at first. I was confused as to how the
@@ -42,7 +42,7 @@ def find_hash(h: str) -> int:
 	# the iterable number that will get added to the string.
 	# starts at 0 but gets added right away in the while loop
 	# so that it truly starts at 1.
-	find_hash = 0
+	nonce = 0
 	# slice off just the first five characters to check if it's
 	# leading with 5 zeroes.
 	while target_hash[:5] != "00000":
@@ -51,14 +51,14 @@ def find_hash(h: str) -> int:
 		# calculations, so that once the next loop starts, if the
 		# previous hash started with 5 zeroes, the next loop wouldn't
 		# run, thereby not adding one to the find_hash.
-		find_hash += 1
-		# concate the secret key and the iterable then encodes it
+		nonce += 1
+		# concatenate the secret key and the iterable then encodes it
 		# to be turned into an md5 hash.
-		str2hash = (h + str(find_hash)).encode()
+		str2hash = (h + str(nonce)).encode()
 		# gets the md5 hash, then converts it into a readable string.
 		target_hash = hashlib.md5(str2hash).hexdigest()
 
-	return find_hash
+	return nonce
 
 '''
  ----- Thoughts on part 1 after completing it. -----
@@ -68,7 +68,7 @@ worked. It took a bit of trial and error, but understanding it conceptually
 made coding it a bit easier, I think.
 Since it must go through numbers by iteration, it can take a good amount of time
 find the right string that leads with 5 zeroes.
-If I really wanted to improvet this, I could probably do something similar to my
+If I really wanted to improve this, I could probably do something similar to my
 java mega millions program and have it multithreaded with each loop going through
 say 999_999 numbers. e.x. thread 1 does 1 to 100_000, thread 2 does 1_000_000 to
 1_999_999 numbers. But that's micro-optimization, since there's no guarantee it'd
@@ -97,7 +97,7 @@ This is done by getting cpu time using the time library and using process_time()
 # and it will look for that instead.
 def find_hash_p2(h: str, leading=5) -> int:
 	target_hash = "0"
-	find_hash = 0
+	nonce = 0
 	# another adjustment, since it's now a different amount
 	# of leading zeroes, we're going to slice off the amount
 	# of leading we want instead of a set 5.
@@ -105,11 +105,11 @@ def find_hash_p2(h: str, leading=5) -> int:
 	# we want.
 	# Breaks if leading is passed a 0.
 	while target_hash[:leading] != leading * "0":
-		find_hash += 1
-		str2hash = (h + str(find_hash)).encode()
+		nonce += 1
+		str2hash = (h + str(nonce)).encode()
 		target_hash = hashlib.md5(str2hash).hexdigest()
 
-	return find_hash
+	return nonce
 
 st = time.process_time()
 print(find_hash(h))
@@ -128,8 +128,7 @@ print(f'Execution Time: {et - st} seconds\n')
 # Aaaand after running it, maybe you don't need to multi-thread it,
 # it's quite fast anyway.
 
-# Not entirely sure how to figure out the time complexity of this,
-# since the number could theoretically be infinite(?).
+# Time Complexity: O(n) in terms of the nonce counter.
 
 class Test(unittest.TestCase):
 	def test_find_hash(self):
