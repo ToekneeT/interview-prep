@@ -33,9 +33,11 @@ def nice_string(str_list: list) -> int:
 		# it'd require a nested loop and a variable. This way I can just continue the current loop.
 		if "ab" in s or "cd" in s or "pq" in s or "xy" in s:
 			continue
-		for i in range(len(s)):
+
+		for i in range(len(s) - 1):
 			if i < len(s) - 1 and s[i + 1] == s[i]:
 				double_char = True
+		for i in range(len(s)):
 			if s[i] in vowels:
 				vowel_count += 1
 		if double_char and vowel_count >= 3:
