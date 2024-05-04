@@ -40,25 +40,22 @@ def find_hash(h: str) -> int:
 	# do while instead of this.
 	target_hash = "0"
 	# the iterable number that will get added to the string.
-	# starts at 0 but gets added right away in the while loop
-	# so that it truly starts at 1.
-	nonce = 0
+	# It's what the final answer should be, added to the end of
+	# the key, whichever number gets starts with a leading 5 0s is the answer.
+	nonce = 1
 	# slice off just the first five characters to check if it's
 	# leading with 5 zeroes.
-	while target_hash[:5] != "00000":
-		# Starts at 1 since the answer can't start with a leading
-		# zero. And by adding the number first, we then perform the
-		# calculations, so that once the next loop starts, if the
-		# previous hash started with 5 zeroes, the next loop wouldn't
-		# run, thereby not adding one to the find_hash.
-		nonce += 1
+	while True:
 		# concatenate the secret key and the iterable then encodes it
 		# to be turned into an md5 hash.
 		str2hash = (h + str(nonce)).encode()
 		# gets the md5 hash, then converts it into a readable string.
 		target_hash = hashlib.md5(str2hash).hexdigest()
 
-	return nonce
+		if target_hash.startswith("00000"):
+			return nonce
+
+		nonce += 1
 
 '''
  ----- Thoughts on part 1 after completing it. -----
@@ -97,19 +94,21 @@ This is done by getting cpu time using the time library and using process_time()
 # and it will look for that instead.
 def find_hash_p2(h: str, leading=5) -> int:
 	target_hash = "0"
-	nonce = 0
+	nonce = 1
 	# another adjustment, since it's now a different amount
 	# of leading zeroes, we're going to slice off the amount
 	# of leading we want instead of a set 5.
 	# then we're going to multiply the 0s by the amount of leading
 	# we want.
 	# Breaks if leading is passed a 0.
-	while target_hash[:leading] != leading * "0":
-		nonce += 1
+	while True: #target_hash[:leading] != leading * "0":
 		str2hash = (h + str(nonce)).encode()
 		target_hash = hashlib.md5(str2hash).hexdigest()
 
-	return nonce
+		if target_hash.startswith("0" * leading):
+			return nonce
+
+		nonce += 1
 
 st = time.process_time()
 print(find_hash(h))
