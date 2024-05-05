@@ -39,16 +39,10 @@ with open("aoc_2015_d6_input.txt") as file:
 	instructions = [line.rstrip("\n") for line in file]
 
 
-def light_on(grid: list[list], r1: int, r2: int, c1: int, c2: int):
+def set_light(grid: list[list], r1: int, r2: int, c1: int, c2: int, state: bool):
 	for row in range(r1, r2 + 1):
 		for col in range(c1, c2 + 1):
-			grid[row][col] = True
-
-
-def light_off(grid: list[list], r1: int, r2: int, c1: int, c2: int):
-	for row in range(r1, r2 + 1):
-		for col in range(c1, c2 + 1):
-			grid[row][col] = False
+			grid[row][col] = state
 
 
 def light_toggle(grid: list[list], r1: int, r2: int, c1: int, c2: int):
@@ -59,6 +53,7 @@ def light_toggle(grid: list[list], r1: int, r2: int, c1: int, c2: int):
 			else:
 				grid[row][col] = True
 
+
 def count_lights(grid: list[list]) -> int:
 	lights_on = 0
 	for r in grid:
@@ -67,6 +62,7 @@ def count_lights(grid: list[list]) -> int:
 				lights_on += 1
 
 	return lights_on
+
 
 def part_one(instructions: list) -> int:
 	lights_on = 0
@@ -100,9 +96,9 @@ def part_one(instructions: list) -> int:
 		# Meaning if we're turning a light on, and the light is off, we'll add. But if the light is already on,
 		# we don't need to add anything.
 		if action == "on":
-			light_on(grid, row1, row2, col1, col2)
+			set_light(grid, row1, row2, col1, col2, True)
 		elif action == "off":
-			light_off(grid, row1, row2, col1, col2)
+			set_light(grid, row1, row2, col1, col2, False)
 		else:
 			light_toggle(grid, row1, row2, col1, col2)
 
@@ -122,23 +118,12 @@ At first, I considered the fact that we can just use math, on add 1, off sub 1, 
 But then I realized that wont be possible since the minimum brightness is zero, can't go under.
 '''
 
-def inc_brightness(grid: list[list], r1: int, r2: int, c1: int, c2: int):
+def adj_brightness(grid: list[list], r1: int, r2: int, c1: int, c2: int, amount: int):
 	for row in range(r1, r2 + 1):
 		for col in range(c1, c2 + 1):
-			grid[row][col] += 1
-
-
-def dec_brightness(grid: list[list], r1: int, r2: int, c1: int, c2: int):
-	for row in range(r1, r2 + 1):
-		for col in range(c1, c2 + 1):
-			if grid[row][col] > 0:
-				grid[row][col] -= 1
-
-
-def tog_brightness(grid: list[list], r1: int, r2: int, c1: int, c2: int):
-	for row in range(r1, r2 + 1):
-		for col in range(c1, c2 + 1):
-			grid[row][col] += 2
+			if grid[row][col] == 0 and amount == -1:
+				return
+			grid[row][col] += amount
 
 
 def count_brightness(grid: list[list]):
@@ -148,6 +133,7 @@ def count_brightness(grid: list[list]):
 			brightness += c
 
 	return brightness
+
 
 def part_two(instructions: list) -> int:
 	brightness = 0
@@ -176,11 +162,11 @@ def part_two(instructions: list) -> int:
 
 
 		if action == "on":
-			inc_brightness(grid, row1, row2, col1, col2)
+			adj_brightness(grid, row1, row2, col1, col2, 1)
 		elif action == "off":
-			dec_brightness(grid, row1, row2, col1, col2)
+			adj_brightness(grid, row1, row2, col1, col2, -1)
 		elif action == "toggle":
-			tog_brightness(grid, row1, row2, col1, col2)
+			adj_brightness(grid, row1, row2, col1, col2, 2)
 
 		brightness = count_brightness(grid)
 
