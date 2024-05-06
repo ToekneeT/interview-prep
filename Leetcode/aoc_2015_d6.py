@@ -39,13 +39,13 @@ with open("aoc_2015_d6_input.txt") as file:
 	instructions = [line.rstrip("\n") for line in file]
 
 
-def set_light(grid: list[list], r1: int, r2: int, c1: int, c2: int, state: bool):
+def set_light(grid: list[list], r1: int, r2: int, c1: int, c2: int, state: bool) -> None:
 	for row in range(r1, r2 + 1):
 		for col in range(c1, c2 + 1):
 			grid[row][col] = state
 
 
-def light_toggle(grid: list[list], r1: int, r2: int, c1: int, c2: int):
+def light_toggle(grid: list[list], r1: int, r2: int, c1: int, c2: int) -> None:
 	for row in range(r1, r2 + 1):
 		for col in range(c1, c2 + 1):
 			if grid[row][col]:
@@ -118,15 +118,13 @@ At first, I considered the fact that we can just use math, on add 1, off sub 1, 
 But then I realized that wont be possible since the minimum brightness is zero, can't go under.
 '''
 
-def adj_brightness(grid: list[list], r1: int, r2: int, c1: int, c2: int, amount: int):
+def adj_brightness(grid: list[list], r1: int, r2: int, c1: int, c2: int, amount: int) -> None:
 	for row in range(r1, r2 + 1):
 		for col in range(c1, c2 + 1):
-			if grid[row][col] == 0 and amount == -1:
-				return
-			grid[row][col] += amount
+			grid[row][col] = max(0, grid[row][col] + amount)
 
 
-def count_brightness(grid: list[list]):
+def count_brightness(grid: list[list]) -> int:
 	brightness = 0
 	for r in grid:
 		for c in r:

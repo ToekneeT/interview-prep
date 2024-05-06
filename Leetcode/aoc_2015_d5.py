@@ -35,7 +35,7 @@ def nice_string(str_list: list) -> int:
 			continue
 
 		for i in range(len(s) - 1):
-			if i < len(s)and s[i + 1] == s[i]:
+			if s[i + 1] == s[i]:
 				double_char = True
 		for i in range(len(s)):
 			if s[i] in vowels:
