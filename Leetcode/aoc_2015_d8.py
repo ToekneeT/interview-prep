@@ -109,20 +109,25 @@ def count_characters_p2(s: str) -> (int, int):
 	increased_len: int = 0
 	idx: int = 0
 	while idx < len(s):
+		# idx changes depending on the type of input.
+		# If there's a \, we skip two characters as
+		# we want to skip the character ahead of it.
+		# otherwise, we just move up one.
 		if s[idx] == '"':
+			idx += 1
 			increased_len += 3
 		elif s[idx] == "\\" and s[idx + 1] == "x":
-			idx += 1
+			idx += 2
 			increased_len += 3
 		elif s[idx] == "\\" and s[idx + 1] == '"':
-			idx += 1
+			idx += 2
 			increased_len += 4
 		elif s[idx] == "\\" and s[idx + 1] == "\\":
-			idx += 1
+			idx += 2
 			increased_len += 4
 		else:
+			idx += 1
 			increased_len += 1
-		idx += 1
 
 	return (increased_len, actual_len)
 
