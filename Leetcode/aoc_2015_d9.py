@@ -121,6 +121,9 @@ def longest_route(locations: list[str]) -> int:
 	return(max(route_distance.values()))
 
 
+# Time Complexity: Since it's using permutations, it'd be O(n!) ?
+
+
 class Test(unittest.TestCase):
 	def test_part_one(self):
 		self.assertEqual(shortest_route(["London to Dublin = 464", "London to Belfast = 518",
