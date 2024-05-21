@@ -28,11 +28,11 @@ def look_say(seq: str, times: int) -> int:
 
 	# Current number we'll be looking ahead of to see if it's the same number or not.
 	current_num: str = seq[0]
-	# Originally a counter, but instead I just added concatenated the number to it.
+	# Originally a counter, but instead I just concatenated the number to it.
 	current_seq: str = seq[0]
 	new_seq: str = ""
 	# Goes through the current sequence, will check which numbers are the same by looking ahead one,
-	# and then if it's not the same, it'll add the current sequence to a new sequence and it's current number.
+	# and then if it's not the same, it'll add the current sequence to a new sequence and its current number.
 	for i in range(len(seq) - 1):
 		if seq[i+1] == current_num:
 			current_seq = current_seq + seq[i]
@@ -54,6 +54,26 @@ Part 2 is just what the length of the sequence would be if it's run 50 times ins
 The issue is, my current solution takes a very long time, doing 40 took a good amount of time.
 So 50 would take even longer.
 So now I want to get execution time, again.
+
+--------------------
+
+My thoughts after completing this:
+Midway through, I wasn't getting the results I wanted. For a bit, I couldn't figure out why.
+And I almost wanted to start over without recursion, because I thought the recursion was complicating things.
+But I kept at, and then boom, it was completed.
+It wasn't actually the recursion that was the issue. I kept up with the idea that as long as my base case is
+correct, I just needed to make sure the rest made sense. Once that lined up, it worked properly.
+
+Overall, I think recursion isn't that difficult. I find myself looking at a problem, and then my mind will
+go "it doable with recursion." Even if it's not the most efficient way to do it, it just feels interesting to do
+in recursion as well as possibly good practice.
+
+Time Complexity: We obviously have the amount of times it'll loop, but that's the smaller portion of the problem.
+I don't actually know how much it increases by, sometimes the length doesn't increase, but often times it does.
+E.x. 1 -> 11 -> 21
+11 -> 21 didn't go up at all.
+Running my input 40 times gave me a length in the 200,000s, but running it 50 times gave it a length of 3.5 million.
+So, overall Time Compexity, O(mn) where n is the times it'll loop and m is the length of the sequence ?
 '''
 import time
 
