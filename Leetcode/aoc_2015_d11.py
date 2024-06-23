@@ -24,9 +24,9 @@ with open("aoc_2015_d11_input.txt") as file:
 
 
 invalid_char: dict = {
-	'i': 105,
-	'o': 111,
-	'l': 108,
+	'i': ord('i'),
+	'o': ord('o'),
+	'l': ord('l'),
 	}
 
 
@@ -49,7 +49,7 @@ def is_valid_pass(psw: list) -> bool:
 	# Checks if there's a double letter anywhere in the string by checking if it's equal to the next letter.
 	double_letter_count = 0
 	i = 0
-	while(i < len(psw) - 1):
+	while i < len(psw) - 1:
 		if psw[i] == psw[i+1]:
 			double_letter_count += 1
 			# Skip past the letter we just checked if it's a valid double letter.
@@ -61,7 +61,7 @@ def is_valid_pass(psw: list) -> bool:
 	double_letter: bool = double_letter_count >= 2
 
 	if not double_letter:
-		return double_letter
+		return False
 
 	# Checks if there are any triple alphabetical sequence.
 	increasing_straight: bool = False
@@ -94,7 +94,7 @@ def next_pass(curr_pass: str) -> str:
 
 	comparision_pass: list = copy.deepcopy(new_pass)
 
-	while(not valid_pass):
+	while not valid_pass:
 		comparision_pass = copy.deepcopy(new_pass)
 		for i in range(len(comparision_pass)):
 			if comparision_pass[i] in invalid_char:
@@ -111,7 +111,7 @@ def next_pass(curr_pass: str) -> str:
 				# This solution is really bad, it was very annoying to wrap my head around when coming up with it,
 				# and I already didn't like my solution to the rest of the code, so I'm going to re-do it, most likely.
 				inc_z: int = 0
-				while(new_pass[i+inc_z] == 'a'):
+				while new_pass[i+inc_z] == 'a':
 					new_pass[i+inc_z-1] = inc_char(new_pass[i+inc_z-1])
 					inc_z -= 1
 
@@ -173,7 +173,7 @@ def next_pass_two(curr_pass: str) -> str:
 	# Turns the new pass into a list as a string isn't mutable.
 	new_pass: list = str_to_list(curr_pass)
 
-	while(not valid_pass):
+	while not valid_pass:
 		for i in range(len(new_pass)):
 			if new_pass[i] in invalid_char:
 				new_pass[i] = increase_last_char(new_pass[i])
